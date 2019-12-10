@@ -15,7 +15,7 @@ def predict():
     pred = model.predict(data[scanners].values)
     return np.expand_dims(pred.mean(axis=0), axis=0)
 
-model = MLP(size="small")
+model = MLPRegressor(size="small")
 model.load('../Models/Small_MLP_Regression_GroupBy_FFill_MinMax.h5')
 client = InfluxDBClient()
 

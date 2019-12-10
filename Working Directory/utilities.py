@@ -75,11 +75,11 @@ class InfluxDBClient:
         return res["OnlineRSSI"]
 
 class AnimatedScatter(object):
-    def __init__(self):
-        self.predict = None
+    def __init__(self, predict):
+        self.predict = predict
         self.stream = self.data_stream()
         self.fig, self.ax = plt.subplots(figsize=(15,15))
-        self.ani = animation.FuncAnimation(self.fig, self.update, interval=500, init_func=self.setup_plot, blit=True)
+        self.ani = animation.FuncAnimation(self.fig, self.update, interval=100, init_func=self.setup_plot, blit=True)
 
         img =  mpimg.imread('../Map/main.png')
         self.ax.imshow(img)
@@ -97,6 +97,3 @@ class AnimatedScatter(object):
         data = next(self.stream)
         self.scat.set_offsets(data[:, :2] * 44)
         return self.scat,
-
-    def setPrediction(self, predict):
-        self.predict = predict

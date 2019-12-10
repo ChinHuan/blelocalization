@@ -1,6 +1,6 @@
 from utilities import scanners, formatData, minMaxScaling
 from utilities import InfluxDBClient, AnimatedScatter
-from models import MLP
+from models import MLPRegressor
 
 import pandas as pd
 import numpy as np
@@ -15,10 +15,9 @@ def predict():
     pred = model.predict(data[scanners].values)
     return np.expand_dims(pred.mean(axis=0), axis=0)
 
-model = MLP()
+model = MLPRegressor()
 model.load('../Models/MLP_Regression_GroupBy_FFill_MinMax.h5')
 client = InfluxDBClient()
 
-ani = AnimatedScatter()
-ani.setPrediction(predict)
+ani = AnimatedScatter(predict)
 plt.show()
