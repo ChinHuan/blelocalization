@@ -8,8 +8,8 @@ A window of sample data is collected to calculate the mean RSSI.
 The larger the window, the more stable the predicted position is. However, larger window leads to a lag in predicted position if the target is moving.
 Two tentative methodologies are proposed.
 
-1. Exponential moving average to prioritize more on the current sampled data compared to the data collected previously. (A weighted mean)
-2. Outlier detection to reduce the effect of sudden movement. (Take the walking speed into consideration)
+1. `Exponential moving average` to prioritize more on the current sampled data compared to the data collected previously. (A weighted mean)
+2. `Outlier detection` to reduce the effect of sudden movement. (Take the walking speed into consideration)
 
 ### **Sample Rate**
 
@@ -23,12 +23,16 @@ The scanners located far away has a low standard deviation because the sample ra
 The scanners located at middle range usually has high standard deviation because of the attenutation  
 The scanners located closed to the beacon has a middle standard deviation  
 
+### **Large Location Deviation Predicted by Classifier**
+
+Could use `k-NN` to limit the false predictions.
+
 ---
 
 ## Decisions
 
 - GroupBy or Rolling  
-  **Decision: Rolling**
+  Decision: `Rolling`
   - Advantages
     - For small amount of data, rolling is better as more data is remained
     - Group by reduces too much data
@@ -41,8 +45,8 @@ The scanners located closed to the beacon has a middle standard deviation
 
 - Forward fill or not
 - Imputation with 0 or -100  
-  ***MinMaxScaling***  
-  **Decision: -100**  
+  **MinMaxScaling**  
+  Decision: `-100`
   - Advantages
     - After applying MinMaxScaling, -100 will become 0
 

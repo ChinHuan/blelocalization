@@ -144,11 +144,10 @@ class MLPClassifier:
             tf.keras.callbacks.EarlyStopping(patience=50, monitor='val_loss')
         ]
         self.model = tf.keras.Sequential([
-            tf.keras.layers.Dense(64, activation='relu', input_shape=(17,),
-                kernel_regularizer=tf.keras.regularizers.l2(0.0005), 
-                bias_regularizer=tf.keras.regularizers.l2(0.0005)
+            tf.keras.layers.Dense(32, activation='sigmoid', input_shape=(17,),
+                kernel_regularizer=tf.keras.regularizers.l2(0.005), 
+                bias_regularizer=tf.keras.regularizers.l2(0.005)
             ),
-            tf.keras.layers.Dropout(0.5),
             tf.keras.layers.Dense(14, activation='softmax')
         ])
 
