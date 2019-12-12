@@ -6,7 +6,7 @@ import numpy as np
 import matplotlib.pyplot as plt
 
 def predict():
-    data = client.retrieveData(seconds=3, beacon="0117C55D14E4")
+    data = client.retrieveData(seconds=10, beacon="0117C55D14E4")
     data = formatData(data)
     data[scanners] = minMaxScaling(data[scanners])
     data = data.rolling(15, min_periods=1).mean().reset_index()
