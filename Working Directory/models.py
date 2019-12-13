@@ -23,11 +23,15 @@ class MLPRegressor:
             tf.keras.callbacks.EarlyStopping(patience=50, monitor='val_loss')
         ]
         self.model = tf.keras.Sequential([
-            tf.keras.layers.Dense(32, activation='relu', input_shape=(17,)),
+            tf.keras.layers.Dense(64, activation='relu', input_shape=(17,),
+                # kernel_regularizer=tf.keras.regularizers.l2(0.001), 
+                # bias_regularizer=tf.keras.regularizers.l2(0.001), 
+                # activity_regularizer=tf.keras.regularizers.l2(0.001)
+            ),
             tf.keras.layers.Dense(2, 
-                kernel_regularizer=tf.keras.regularizers.l2(0.02), 
-                bias_regularizer=tf.keras.regularizers.l2(0.02), 
-                activity_regularizer=tf.keras.regularizers.l2(0.02))
+                kernel_regularizer=tf.keras.regularizers.l2(0.001), 
+                bias_regularizer=tf.keras.regularizers.l2(0.001), 
+                activity_regularizer=tf.keras.regularizers.l2(0.001))
         ])
 
         self.model.compile(
@@ -83,12 +87,12 @@ class MLPRegressor:
         plt.figure()
         plotter = tfdocs.plots.HistoryPlotter(smoothing_std=2)
         plotter.plot({"": self.history}, metric = "mae")
-        plt.ylim([0, 10])
+        plt.ylim([0, 5])
         plt.ylabel('Mean Absolute Error')
 
         plt.figure()
         plotter.plot({"": self.history}, metric = "mse")
-        plt.ylim([0, 20])
+        plt.ylim([0, 5])
         plt.ylabel('Mean Squared Error')
 
         plt.show()
@@ -99,7 +103,7 @@ class MLPRegressor:
         fig = plt.figure(figsize=(10, 20))
         lims = [0, 50]
         ax1 = fig.add_subplot(121, aspect='equal', title='X', xlim=lims, ylim=lims, xlabel='True Values', ylabel='Predictions')
-        ax1.scatter(y_validation[:, 0], preds[:, 0])
+        ax1.scatter(y_validation[:, 0], preds[:, 0], alpha=0.1)
         ax1.plot(lims, lims)
 
         error = preds - y_validation
@@ -110,7 +114,7 @@ class MLPRegressor:
         lims = [0, 50]
         ax1 = fig.add_subplot(121, aspect='equal', title='Y', xlim=lims, ylim=lims, xlabel='True Values', ylabel='Predictions')
 
-        ax1.scatter(y_validation[:, 1], preds[:, 1])
+        ax1.scatter(y_validation[:, 1], preds[:, 1], alpha=0.1)
         ax1.plot(lims, lims)
 
         error = preds - y_validation
