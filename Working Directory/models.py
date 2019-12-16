@@ -149,7 +149,7 @@ class MLPRegressor:
         # ax2.hist(error[:, 0])
 
         fig = plt.figure(figsize=(10, 20))
-        lims = [0, 50]
+        lims = [0, 20]
         ax1 = fig.add_subplot(121, aspect='equal', title='Y', xlim=lims, ylim=lims, xlabel='True Values', ylabel='Predictions')
         ax1.scatter(y_validation[:, 1], preds[:, 1], alpha=0.1)
         ax1.plot(lims, lims)
@@ -176,7 +176,7 @@ class MLPRegressor:
         ax1.plot(lims, lims)
 
         fig = plt.figure(figsize=(10, 20))
-        lims = [0, 50]
+        lims = [0, 20]
         ax1 = fig.add_subplot(121, aspect='equal', title='Y', xlim=lims, ylim=lims, xlabel='True Values', ylabel='Predictions')
 
         ax1.scatter(y_test[:, 1], preds[:, 1], alpha=0.1)
