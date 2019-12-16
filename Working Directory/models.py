@@ -1,3 +1,5 @@
+from XYRegressor import XYRegressor
+
 import pandas as pd
 import numpy as np
 import tensorflow as tf
@@ -27,23 +29,13 @@ class MLPRegressor:
         self.callbacks = [
             tf.keras.callbacks.EarlyStopping(patience=50, monitor='val_loss')
         ]
-        self.model = tf.keras.Sequential([
-            tf.keras.layers.Dense(64, activation='relu', input_shape=(17,)),
-            tf.keras.layers.Dense(64, activation='relu',
-                kernel_regularizer=tf.keras.regularizers.l2(0.001), 
-                bias_regularizer=tf.keras.regularizers.l2(0.001), 
-                activity_regularizer=tf.keras.regularizers.l2(0.001)),
-            tf.keras.layers.Dense(2,
-                kernel_regularizer=tf.keras.regularizers.l2(0.001), 
-                bias_regularizer=tf.keras.regularizers.l2(0.001), 
-                activity_regularizer=tf.keras.regularizers.l2(0.001))
-        ])
+        self.model = XYRegressor()
 
         self.model.compile(
             optimizer=self.optimizer, 
             loss=self.loss, 
             metrics=self.metrics)
-        self.model.summary()
+        # self.model.summary()
 
     def create_small_model(self):
         self.optimizer = tf.keras.optimizers.RMSprop(0.001)

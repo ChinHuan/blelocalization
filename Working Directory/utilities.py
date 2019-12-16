@@ -50,6 +50,11 @@ def read_pin(filename):
     pinMap = pin.set_index("Id").transpose()
     return pinMap.to_dict()
 
+def read_ble(filename):
+    pin = pd.read_csv(filename)[['BLE_MAC', 'X', 'Y']]
+    pinMap = pin.set_index("BLE_MAC").transpose()
+    return pinMap.to_dict()
+
 def train_validation_test_split(df, train_portion=0.6, validation_portion=0.2, random_state=123456):
     first = train_portion
     second = train_portion + validation_portion
