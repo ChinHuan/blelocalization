@@ -1,4 +1,5 @@
 import pandas as pd
+import numpy as np
 import tensorflow as tf
 import tensorflow_docs as tfdocs
 import tensorflow_docs.plots
@@ -28,11 +29,11 @@ class MLPRegressor:
         ]
         self.model = tf.keras.Sequential([
             tf.keras.layers.Dense(64, activation='relu', input_shape=(17,)),
-            tf.keras.layers.Dense(64, 
+            tf.keras.layers.Dense(64, activation='relu',
                 kernel_regularizer=tf.keras.regularizers.l2(0.001), 
                 bias_regularizer=tf.keras.regularizers.l2(0.001), 
                 activity_regularizer=tf.keras.regularizers.l2(0.001)),
-            tf.keras.layers.Dense(2, 
+            tf.keras.layers.Dense(2,
                 kernel_regularizer=tf.keras.regularizers.l2(0.001), 
                 bias_regularizer=tf.keras.regularizers.l2(0.001), 
                 activity_regularizer=tf.keras.regularizers.l2(0.001))
@@ -135,6 +136,7 @@ class MLPRegressor:
         print("Mean squared error:", validation_scores[2])
 
         preds = self.model.predict(X_validation)
+        print("Average distance error:", self._average_distance_error(preds, y_validation))
 
         fig = plt.figure(figsize=(10, 20))
         lims = [0, 50]
@@ -165,6 +167,7 @@ class MLPRegressor:
         print("Mean squared error:", test_scores[2])
 
         preds = self.model.predict(X_test)
+        print("Average distance error:", self._average_distance_error(preds, y_test))
 
         fig = plt.figure(figsize=(10, 20))
         lims = [0, 50]
@@ -180,6 +183,9 @@ class MLPRegressor:
         ax1.plot(lims, lims)
 
         plt.show()
+        
+    def _average_distance_error(self, preds, y_test):
+        return np.mean(np.sqrt(np.sum(np.square(preds - y_test), axis=1)))
 
 class MLPClassifier:
     def __init__(self, size='normal'):
