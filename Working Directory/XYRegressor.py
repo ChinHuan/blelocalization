@@ -6,18 +6,18 @@ class XYRegressor(tf.keras.Model):
         super(XYRegressor, self).__init__()
         self.dx1 = tf.keras.layers.Dense(64, activation='relu', input_shape=(17,))
         self.dx2 = tf.keras.layers.Dense(64, activation='relu', 
-                                         kernel_regularizer=tf.keras.regularizers.l2(0.005), 
-                                         bias_regularizer=tf.keras.regularizers.l2(0.005))      
-        self.dx3 = tf.keras.layers.Dense(1, kernel_regularizer=tf.keras.regularizers.l2(0.005), 
-                                         bias_regularizer=tf.keras.regularizers.l2(0.005))
+                                         kernel_regularizer=tf.keras.regularizers.l2(0.001), 
+                                         bias_regularizer=tf.keras.regularizers.l2(0.001))      
+        self.dx3 = tf.keras.layers.Dense(1, kernel_regularizer=tf.keras.regularizers.l2(0.001), 
+                                         bias_regularizer=tf.keras.regularizers.l2(0.001))
         
         self.dy1 = tf.keras.layers.Dense(64, activation='relu', input_shape=(17,))
         self.dy2 = tf.keras.layers.Dense(64, activation='relu', 
-                                         kernel_regularizer=tf.keras.regularizers.l2(0.005), 
-                                         bias_regularizer=tf.keras.regularizers.l2(0.005))
-        self.dy3 = tf.keras.layers.Dense(1, kernel_regularizer=tf.keras.regularizers.l2(0.005), 
-                                         bias_regularizer=tf.keras.regularizers.l2(0.005))
-        
+                                         kernel_regularizer=tf.keras.regularizers.l2(0.001), 
+                                         bias_regularizer=tf.keras.regularizers.l2(0.01))
+        self.dy3 = tf.keras.layers.Dense(1, kernel_regularizer=tf.keras.regularizers.l2(0.001), 
+                                         bias_regularizer=tf.keras.regularizers.l2(0.001))
+
         self.concat = tf.keras.layers.Concatenate(axis=1)
 
     def call(self, i):

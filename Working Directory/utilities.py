@@ -66,6 +66,26 @@ def train_validation_split(df, train_portion=0.8, random_state=123456):
 def min_max_scaling(df, min=-100, max=-40):
     return (df - min) / (max - min)
 
+def exp_rep(data):
+    threshold = -90
+    minimum = -100
+    alpha = 50
+
+    for s in scanners:
+        data[s] = data[s].apply(lambda x: 0 if x <= threshold else x - minimum)
+
+    data[scanners] = np.exp(data[scanners] / alpha) / np.exp(-minimum / alpha)
+
+def powed_rep(data):
+    threshold = -90
+    minimum = -100
+    beta = np.e
+
+    for s in scanners:
+        data[s] = data[s].apply(lambda x: 0 if x <= threshold else x - minimum)
+        
+    data[scanners] = np.power(data[scanners], beta) / np.power(-minimum, beta)
+
 def format_data(data):
     data = data.pivot(columns="scanner", values="rssi").rename_axis(None, axis=1)
     data = data.reindex(columns=scanners)

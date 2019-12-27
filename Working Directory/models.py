@@ -21,11 +21,11 @@ class MLPRegressor:
             self.create_special_model()
 
     def create_special_model(self):
-        self.optimizer = tf.keras.optimizers.RMSprop(0.001)
+        self.optimizer = tf.keras.optimizers.RMSprop(0.0005)
         self.loss = "mse"
         self.metrics = ["mae", "mse"]
-        self.batch_size = 32
-        self.epochs = 1000
+        self.batch_size = 64
+        self.epochs = 2000
         self.callbacks = [
             tf.keras.callbacks.EarlyStopping(patience=50, monitor='val_loss')
         ]
