@@ -21,13 +21,13 @@ class MLPRegressor:
             self.create_special_model()
 
     def create_special_model(self):
-        self.optimizer = tf.keras.optimizers.RMSprop(0.0005)
+        self.optimizer = tf.keras.optimizers.RMSprop(0.0001)
         self.loss = "mse"
         self.metrics = ["mae", "mse"]
-        self.batch_size = 64
-        self.epochs = 2000
+        self.batch_size = 32
+        self.epochs = 4000
         self.callbacks = [
-            tf.keras.callbacks.EarlyStopping(patience=50, monitor='val_loss')
+            tf.keras.callbacks.EarlyStopping(patience=100, monitor='val_loss')
         ]
         self.model = XYRegressor()
 
@@ -44,7 +44,7 @@ class MLPRegressor:
         self.batch_size = 32
         self.epochs = 1000
         self.callbacks = [
-            tf.keras.callbacks.EarlyStopping(patience=50, monitor='val_loss')
+            # tf.keras.callbacks.EarlyStopping(patience=50, monitor='val_loss')
         ]
         self.model = tf.keras.Sequential([
             tf.keras.layers.Dense(64, activation='relu', input_shape=(17,),
@@ -65,7 +65,7 @@ class MLPRegressor:
         self.model.summary()
 
     def create_model(self):
-        self.optimizer = tf.keras.optimizers.RMSprop(0.001)
+        self.optimizer = tf.keras.optimizers.RMSprop(0.0001)
         self.loss = "mse"
         self.metrics = ["mae", "mse"]
         self.batch_size = 32
@@ -111,12 +111,12 @@ class MLPRegressor:
         plt.figure()
         plotter = tfdocs.plots.HistoryPlotter(smoothing_std=2)
         plotter.plot({"": self.history}, metric = "mae")
-        plt.ylim([0, 5])
+        plt.ylim([0, 20])
         plt.ylabel('Mean Absolute Error')
 
         plt.figure()
         plotter.plot({"": self.history}, metric = "mse")
-        plt.ylim([0, 5])
+        plt.ylim([0, 30])
         plt.ylabel('Mean Squared Error')
 
         plt.show()
