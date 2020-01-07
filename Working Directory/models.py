@@ -27,7 +27,7 @@ class MLPRegressor:
         self.batch_size = 32
         self.epochs = 4000
         self.callbacks = [
-            tf.keras.callbacks.EarlyStopping(patience=100, monitor='val_loss')
+            tf.keras.callbacks.EarlyStopping(patience=3, monitor='val_loss')
         ]
         self.model = XYRegressor()
 
@@ -111,12 +111,12 @@ class MLPRegressor:
         plt.figure()
         plotter = tfdocs.plots.HistoryPlotter(smoothing_std=2)
         plotter.plot({"": self.history}, metric = "mae")
-        plt.ylim([0, 20])
+        plt.ylim([0, 10])
         plt.ylabel('Mean Absolute Error')
 
         plt.figure()
         plotter.plot({"": self.history}, metric = "mse")
-        plt.ylim([0, 30])
+        plt.ylim([0, 40])
         plt.ylabel('Mean Squared Error')
 
         plt.show()
