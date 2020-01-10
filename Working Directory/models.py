@@ -19,15 +19,45 @@ class MLPRegressor:
             self.create_small_model()
         elif model_type == 'special':
             self.create_special_model()
+        elif model_type == 'converging':
+            self.create_converging_model()
+            
+    def create_converging_model(self):
+        self.optimizer = tf.keras.optimizers.Adam(0.0001)
+        self.loss = "mse"
+        self.metrics = ["mae", "mse"]
+        self.batch_size = 32
+        self.epochs = 1000
+        self.callbacks = [
+            tf.keras.callbacks.EarlyStopping(patience=50, monitor='val_loss')
+        ]
+        self.model = tf.keras.Sequential([
+            tf.keras.layers.Dense(16, activation='relu', input_shape=(17,)),
+            tf.keras.layers.Dense(8, activation='relu',
+                kernel_regularizer=tf.keras.regularizers.l2(0.002), 
+                bias_regularizer=tf.keras.regularizers.l2(0.002)),
+            tf.keras.layers.Dense(4, activation='relu',
+                kernel_regularizer=tf.keras.regularizers.l2(0.001), 
+                bias_regularizer=tf.keras.regularizers.l2(0.001)),
+            tf.keras.layers.Dense(2,
+                kernel_regularizer=tf.keras.regularizers.l2(0.001), 
+                bias_regularizer=tf.keras.regularizers.l2(0.001))
+        ])
+
+        self.model.compile(
+            optimizer=self.optimizer, 
+            loss=self.loss, 
+            metrics=self.metrics)
+        self.model.summary()
 
     def create_special_model(self):
-        self.optimizer = tf.keras.optimizers.RMSprop(0.0001)
+        self.optimizer = tf.keras.optimizers.Adam(0.0001)
         self.loss = "mse"
         self.metrics = ["mae", "mse"]
         self.batch_size = 32
         self.epochs = 4000
         self.callbacks = [
-            tf.keras.callbacks.EarlyStopping(patience=3, monitor='val_loss')
+            tf.keras.callbacks.EarlyStopping(patience=50, monitor='val_loss')
         ]
         self.model = XYRegressor()
 
@@ -111,27 +141,27 @@ class MLPRegressor:
         plt.figure()
         plotter = tfdocs.plots.HistoryPlotter(smoothing_std=2)
         plotter.plot({"": self.history}, metric = "mae")
-        plt.ylim([0, 10])
+        plt.ylim([0, 0.05])
         plt.ylabel('Mean Absolute Error')
 
         plt.figure()
         plotter.plot({"": self.history}, metric = "mse")
-        plt.ylim([0, 40])
+        plt.ylim([0, 0.02])
         plt.ylabel('Mean Squared Error')
 
         plt.show()
 
-    def model_validation(self, X_validation, y_validation):
+    def model_validation(self, X_validation, y_validation, scaled=False):
         validation_scores = self.model.evaluate(X_validation, y_validation, verbose=2)
         print("Validation loss:", validation_scores[0])
         print("Mean absolute error:", validation_scores[1])
         print("Mean squared error:", validation_scores[2])
 
         preds = self.model.predict(X_validation)
-        print("Average distance error:", self._average_distance_error(preds, y_validation))
+        print("Average distance error:", self._average_distance_error(preds, y_validation, scaled=scaled))
 
         fig = plt.figure(figsize=(10, 20))
-        lims = [0, 50]
+        lims = [0, 1]
         ax1 = fig.add_subplot(121, aspect='equal', title='X', xlim=lims, ylim=lims, xlabel='True Values', ylabel='Predictions')
         ax1.scatter(y_validation[:, 0], preds[:, 0], alpha=0.1)
         ax1.plot(lims, lims)
@@ -141,7 +171,7 @@ class MLPRegressor:
         # ax2.hist(error[:, 0])
 
         fig = plt.figure(figsize=(10, 20))
-        lims = [0, 20]
+        lims = [0, 1]
         ax1 = fig.add_subplot(121, aspect='equal', title='Y', xlim=lims, ylim=lims, xlabel='True Values', ylabel='Predictions')
         ax1.scatter(y_validation[:, 1], preds[:, 1], alpha=0.1)
         ax1.plot(lims, lims)
@@ -152,23 +182,23 @@ class MLPRegressor:
 
         plt.show()
 
-    def model_testing(self, X_test, y_test):
+    def model_testing(self, X_test, y_test, scaled=False):
         test_scores = self.model.evaluate(X_test, y_test, verbose=2)
         print("Test loss:", test_scores[0])
         print("Mean absolute error:", test_scores[1])
         print("Mean squared error:", test_scores[2])
 
         preds = self.model.predict(X_test)
-        print("Average distance error:", self._average_distance_error(preds, y_test))
+        print("Average distance error:", self._average_distance_error(preds, y_test, scaled=scaled))
 
         fig = plt.figure(figsize=(10, 20))
-        lims = [0, 50]
+        lims = [0, 1]
         ax1 = fig.add_subplot(121, aspect='equal', title='X', xlim=lims, ylim=lims, xlabel='True Values', ylabel='Predictions')
         ax1.scatter(y_test[:, 0], preds[:, 0], alpha=0.1)
         ax1.plot(lims, lims)
 
         fig = plt.figure(figsize=(10, 20))
-        lims = [0, 20]
+        lims = [0, 1]
         ax1 = fig.add_subplot(121, aspect='equal', title='Y', xlim=lims, ylim=lims, xlabel='True Values', ylabel='Predictions')
 
         ax1.scatter(y_test[:, 1], preds[:, 1], alpha=0.1)
@@ -176,8 +206,17 @@ class MLPRegressor:
 
         plt.show()
         
-    def _average_distance_error(self, preds, y_test):
-        return np.mean(np.sqrt(np.sum(np.square(preds - y_test), axis=1)))
+    def _average_distance_error(self, preds, y_test, scaled=False):
+        if scaled:
+            ori_preds = np.copy(preds)
+            ori_preds[:, 0] = ori_preds[:, 0] * 33.5
+            ori_preds[:, 1] = ori_preds[:, 1] * 16.8
+            ori_y_test = np.copy(y_test)
+            ori_y_test[:, 0] = ori_y_test[:, 0] * 33.5
+            ori_y_test[:, 1] = ori_y_test[:, 1] * 16.8
+            return np.mean(np.sqrt(np.sum(np.square(ori_preds - ori_y_test), axis=1)))
+        else:
+            return np.mean(np.sqrt(np.sum(np.square(preds - y_test), axis=1)))
 
 class MLPClassifier:
     def __init__(self, size='normal'):

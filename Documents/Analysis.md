@@ -44,15 +44,29 @@ Could use `k-NN` to limit the false predictions.
     - Not yet tested on big data
 
 - Forward fill or not
-- Imputation with 0 or -100  
+- Imputation  
   **MinMaxScaling**  
   Decision: `-100`
   - Advantages
     - After applying MinMaxScaling, -100 will become 0
+  
+  **General**  
+  Decision: `Linear Imputation`
+  - Advantages
+    - The imputed RSSI is more similar to the online RSSI
 
 - Scaling (No scaling, MinMaxScaling, StandardScaling ...)
+  Decision: `MinMaxScaling`
+  - Advantages
+    - Easy to use
+
+  - Note
+    - Exponential and powed representation are potentially helpful representation in large area
 
 - Classification or Regression
+  Decision: `Regression`
+  - Advantages
+    - Do not need to find the centroid among the top *k* candidates in classification
 
 ---
 
