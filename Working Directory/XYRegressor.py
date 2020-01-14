@@ -14,7 +14,7 @@ class XYRegressor(tf.keras.Model):
         self.dy1 = tf.keras.layers.Dense(64, activation='relu', input_shape=(17,))
         self.dy2 = tf.keras.layers.Dense(64, activation='relu', 
                                          kernel_regularizer=tf.keras.regularizers.l2(0.001), 
-                                         bias_regularizer=tf.keras.regularizers.l2(0.01))
+                                         bias_regularizer=tf.keras.regularizers.l2(0.001))
         self.dy3 = tf.keras.layers.Dense(1, kernel_regularizer=tf.keras.regularizers.l2(0.001), 
                                          bias_regularizer=tf.keras.regularizers.l2(0.001))
 
