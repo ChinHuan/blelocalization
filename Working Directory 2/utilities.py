@@ -60,7 +60,7 @@ def train_validation_test_split(df, train_portion=0.6, validation_portion=0.2, r
     second = train_portion + validation_portion
     return np.split(df.sample(frac=1, random_state=random_state), [int(first * len(df)), int(second * len(df))])
 
-def train_validation_split(df, train_portion=0.8, random_state=123456):
+def train_validation_split(df, train_portion=0.9, random_state=123456):
     return np.split(df.sample(frac=1, random_state=random_state), [int(train_portion * len(df))])
 
 def min_max_scaling(df, min=-100, max=-40):
