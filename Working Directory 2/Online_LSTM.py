@@ -6,10 +6,10 @@ import numpy as np
 import matplotlib.pyplot as plt
 import joblib
 import tensorflow as tf
+from sklearn.preprocessing import normalize
 
-ble = read_ble('../Data/ble.csv')
-coor = np.array([0, 0])
-scanners.remove('D2B6503554D7')
+import os
+os.environ['CUDA_VISIBLE_DEVICES'] = '-1'
 
 def create_window(dataset, win_size, start_index=0, end_index=None):
     data = []
@@ -38,27 +38,22 @@ def reg_impute(data):
         ss.index = data.index
         data[s].fillna(ss, inplace=True)
 
-def inv_scale(y):
-    s = np.array([33.5, 16.8])
-    return y * s
-
 def predict():
     global coor
     data = client.retrieveData(seconds=10, beacon="0117C55D14E4")
     data = format_data(data)
     impute(data)
     reg_impute(data)
+    data[scanners] = normalize(data[scanners] + 100)
     data = create_window(data, 10)
-    coor = model.predict(data).mean(axis=0)
-    coor = coor.mean(axis=0)
-    coor = inv_scale(coor)
+    coor = model.predict(data).mean(axis=1).mean(axis=0)
     print(coor)
     return np.expand_dims(coor, axis=0)
 
+ble = read_ble('../Data/ble.csv')
+coor = np.array([0, 0])
 model = tf.keras.models.load_model("../Models/LSTM_W10.h5")
 client = InfluxDBClient()
 
 ani = AnimatedScatter(predict)
 plt.show()
-
-
