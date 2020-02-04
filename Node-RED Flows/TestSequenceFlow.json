@@ -1,0 +1,1 @@
+[{"id":"12eb9721.a93ca9","type":"influxdb out","z":"c5947a5f.5d9fa8","influxdb":"18f339cd.8de9a6","name":"","measurement":"TestSequenceRSSI","precision":"ms","retentionPolicy":"","x":1140,"y":600,"wires":[]},{"id":"18f339cd.8de9a6","type":"influxdb","z":"","hostname":"127.0.0.1","port":"8086","protocol":"http","database":"Megallen2","name":"","usetls":false,"tls":""}]
